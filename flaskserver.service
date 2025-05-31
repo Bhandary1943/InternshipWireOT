@@ -1,0 +1,28 @@
+# Step 1: Create systemd service file
+sudo nano /etc/systemd/system/flaskserver.service
+
+# Paste the following content:
+[Unit]
+Description=Flask Server for ESP32 Image Receiver
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/python3 /home/wirepi/Wire/python_server.py
+WorkingDirectory=/home/wirepi/Wire
+StandardOutput=inherit
+StandardError=inherit
+Restart=always
+User=wirepi
+
+[Install]
+WantedBy=multi-user.target
+
+# Step 2: Reload and enable the service
+sudo systemctl daemon-reexec
+sudo systemctl daemon-reload
+sudo systemctl enable flaskserver
+sudo systemctl start flaskserver
+
+# Step 3: Check status and logs
+sudo systemctl status flaskserver
+journalctl -u flaskserver -f
